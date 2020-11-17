@@ -4,12 +4,13 @@ import { Layout } from '@components';
 import styled from 'styled-components';
 import { Main } from '@styles';
 import { Helmet } from 'react-helmet';
+import PropTypes from 'prop-types';
 
 const StyledMainContainer = styled(Main)`
   counter-reset: section;
 `;
 
-const Work = () => {
+const Work = ({ location }) => {
   const data = useStaticQuery(graphql`
     query {
       allMarkdownRemark(filter: { fileAbsolutePath: { regex: "/work/" } }) {
@@ -26,7 +27,7 @@ const Work = () => {
   `);
 
   return (
-    <Layout>
+    <Layout location={location}>
       <Helmet>
         <title>Looking for Work</title>
         <link rel="canonical" href="https://florians.dev/work" />
@@ -42,6 +43,9 @@ const Work = () => {
       </StyledMainContainer>
     </Layout>
   );
+};
+Work.propTypes = {
+  location: PropTypes.object.isRequired,
 };
 
 export default Work;
