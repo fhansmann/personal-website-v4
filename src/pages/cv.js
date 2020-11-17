@@ -1,35 +1,50 @@
 import React from 'react';
+import { graphql, useStaticQuery } from 'gatsby';
 import { Layout } from '@components';
 import styled from 'styled-components';
-import { Main, mixins } from '@styles';
+import { Main } from '@styles';
 import { Helmet } from 'react-helmet';
-import { Link } from 'gatsby';
 import PropTypes from 'prop-types';
-
 const StyledMainContainer = styled(Main)`
   counter-reset: section;
 `;
 
-const StyledHomeButton = styled(Link)`
-  ${mixins.bigButton};
-  margin-top: 40px;
-`;
+const CV = ({ location }) => {
+  const data = useStaticQuery(graphql`
+    query {
+      allMarkdownRemark(filter: { fileAbsolutePath: { regex: "/work/" } }) {
+        edges {
+          node {
+            frontmatter {
+              title
+            }
+            html
+          }
+        }
+      }
+    }
+  `);
 
-const CV = ({ location }) => (
-  <Layout location={location}>
-    <Helmet>
-      <title>CV</title>
-      <link rel="canonical" href="https://florians.dev/cv" />
-    </Helmet>
+  return (
+    <Layout location={location}>
+      <Helmet>
+        <title>Looking for Work</title>
+        <link rel="canonical" href="https://florians.dev/work" />
+      </Helmet>
 
-    <StyledMainContainer>
-      <div> Work in Progress ;-) </div>
-      <StyledHomeButton to="/">Go Home</StyledHomeButton>
-    </StyledMainContainer>
-  </Layout>
-);
-
+      <StyledMainContainer>
+        {data.allMarkdownRemark.edges.map(({ node }) => (
+          <div key={node.id}>
+            <h3>{node.frontmatter.title}</h3>
+            <div dangerouslySetInnerHTML={{ __html: node.html }} />
+          </div>
+        ))}
+      </StyledMainContainer>
+    </Layout>
+  );
+};
 CV.propTypes = {
   location: PropTypes.object.isRequired,
 };
+
 export default CV;

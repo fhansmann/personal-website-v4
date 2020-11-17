@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { Main } from '@styles';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
-
 const StyledMainContainer = styled(Main)`
   counter-reset: section;
 `;
